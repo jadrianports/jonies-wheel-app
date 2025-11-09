@@ -47,6 +47,20 @@ const showWinnerModal = ref(false);
 const currentWinner = ref('');
 const isSpinning = ref(false);
 let wheel = null;
+let idleAnimationId = null;
+const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+function playTick() {
+  const oscillator = audioContext.createOscillator();
+  const gainNode = audioContext.createGain();
+  oscillator.connect(gainNode);
+  gainNode.connect(audioContext.destination);
+  oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+  gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+  gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+  oscillator.start(audioContext.currentTime);
+  oscillator.stop(audioContext.currentTime + 0.1);
+}
 
 // Define props for names and emits
 const props = defineProps({
@@ -76,6 +90,13 @@ function createWheelConfig(items) {
     itemBackgroundColors: ['#a41f22','#ffffff','#f9ab17', '#ffffff','#ef4625', '#ffffff', '#f9ab17', '#ffffff'],
     borderWidth: 10,
     borderColor: '#a41f22',
+    rotationSpeedMax: 500, // Higher initial speed for faster acceleration
+    rotationResistance: -25, // Lower resistance for slower deceleration
+    onCurrentIndexChange: event => {
+      if (isSpinning.value) {
+        playTick();
+      }
+    },
     onRest: event => {
       const idx = event.currentIndex;
       console.log('Wheel stopped at index:', idx);
@@ -104,8 +125,28 @@ const entries = computed(() => {
   }));
 });
 
+function startIdleSpin() {
+  if (idleAnimationId) return;
+  const spinSpeed = 0.05; // Very slow rotation
+  const animate = () => {
+    if (wheel && !isSpinning.value && !showWinnerModal.value) {
+      wheel.rotation += spinSpeed;
+    }
+    idleAnimationId = requestAnimationFrame(animate);
+  };
+  animate();
+}
+
+function stopIdleSpin() {
+  if (idleAnimationId) {
+    cancelAnimationFrame(idleAnimationId);
+    idleAnimationId = null;
+  }
+}
+
 onMounted(() => {
   wheel = new Wheel(wheelContainer.value, createWheelConfig(entries.value));
+  startIdleSpin();
   // keyboard shortcut: Ctrl+Enter or Cmd+Enter to spin
   const keyHandler = (e) => {
     if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
@@ -131,6 +172,7 @@ onBeforeUnmount(() => {
   if (wheel && wheel._keyHandler) {
     window.removeEventListener('keydown', wheel._keyHandler)
   }
+  stopIdleSpin();
 });
 
 function handleWinner() {
@@ -142,7 +184,7 @@ function doSpin() {
   if (!wheel || isSpinning.value) return
   // spin to random item:
   isSpinning.value = true
-  wheel.spin(400);
+  wheel.spin(600);
   console.log("Wheel is now spinning!")
 }
 

@@ -50,7 +50,7 @@ function toggleFullscreen() {
                         <img src="../assets/jonies-logo.jpg" alt="logo">
                     </q-avatar>
                     <q-toolbar-title class="text-weight-regular">
-                        Jonie's Sizzlers and Roast
+                        Jonies Sizzlers + Roast
                     </q-toolbar-title>
                 </q-btn>
                 <div class="q-space"></div>
@@ -65,7 +65,7 @@ function toggleFullscreen() {
                     </q-btn>
                     <q-btn flat no-caps class="q-ml-sm" @click="handleOpen">
                         <q-icon name="fas fa-folder-open" class="q-mr-sm" />
-                        <span>Open</span>
+                        <span>Import</span>
                     </q-btn>
                     <q-btn flat no-caps class="q-ml-sm" @click="toggleFullscreen">
                         <q-icon name="fas fa-expand" class="q-mr-sm" />

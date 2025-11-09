@@ -180,25 +180,25 @@ defineExpose({ addWinner, resetToDefault, importNames })
 
 /* Make the names textarea fixed height and scrollable */
 .names-textarea :deep(.q-field__control) {
-  max-height: min(clamp(300px, 40vh, 640px), calc(100vh - 320px));
+  max-height: min(clamp(300px, 70vh, 640px), calc(100vh - 320px));
   overflow: auto;
 }
 .names-textarea textarea {
-  height: min(clamp(260px, 36vh, 600px), calc(100vh - 360px));
+  height: min(clamp(260px, 80vh, 600px), calc(100vh - 360px));
   overflow-y: auto;
 }
 .right-column--responsive {
   /* min 260px width, responsive height */
-  min-height: clamp(320px, 45vh, 760px);
+  min-height: clamp(320px, 75vh, 760px);
 }
 .full-height--responsive {
-  min-height: clamp(320px, 45vh, 760px);
+  min-height: clamp(320px, 75vh, 760px);
   /* ensure the column never extends under a fixed header */
   max-height: calc(100vh - 140px);
   overflow: auto;
 }
 .q-tab-panels--responsive {
-  min-height: clamp(300px, 42vh, 720px) !important;
+  min-height: clamp(300px, 72vh, 720px) !important;
   max-height: calc(100vh - 220px) !important;
   overflow: auto;
 }
