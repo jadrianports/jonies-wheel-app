@@ -11,6 +11,10 @@ lerna-debug.log*
 *.md
 TODO.md*
 
+# builds
+release
+*.release
+
 node_modules
 dist
 dist-ssr

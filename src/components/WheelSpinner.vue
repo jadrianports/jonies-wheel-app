@@ -19,7 +19,7 @@
     </div>
     <!-- Winner Modal -->
     <q-dialog v-model="showWinnerModal">
-      <q-card style="min-width: 350px">
+      <q-card style="min-width: 550px">
         <q-card-section class="row items-center">
           <div class="text-h6">We have a winner! 🎉</div>
         </q-card-section>
@@ -40,6 +40,7 @@
 import { ref, onMounted, onBeforeUnmount, computed, watch } from 'vue';
 // import the library
 import { Wheel } from 'spin-wheel';
+import confetti from 'canvas-confetti';
 import joniesLogo from '../assets/jonies-logo.jpg';
 
 const wheelContainer = ref(null);
@@ -49,6 +50,7 @@ const isSpinning = ref(false);
 let wheel = null;
 let idleAnimationId = null;
 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+const cheerAudio = new Audio('https://www.soundjay.com/human/sounds/applause-01.mp3');
 
 function playTick() {
   const oscillator = audioContext.createOscillator();
@@ -82,6 +84,15 @@ function truncateText(text, maxLength = 12) {
 
 // Create a wheel configuration factory to ensure consistent settings
 function createWheelConfig(items) {
+  // Dynamically adjust font size based on number of segments to prevent crushing
+  const numSegments = items.length;
+  let fontSize = 40; // Default font size
+  if (numSegments > 20) fontSize = 30;
+  if (numSegments > 38) fontSize = 20;
+  if (numSegments > 60) fontSize = 10;
+  if (numSegments > 100) fontSize = 8;
+  if (numSegments > 200) fontSize = 6;
+
   return {
     items,
     pointerAngle: 0,
@@ -90,6 +101,7 @@ function createWheelConfig(items) {
     itemBackgroundColors: ['#a41f22','#ffffff','#f9ab17', '#ffffff','#ef4625', '#ffffff', '#f9ab17', '#ffffff'],
     borderWidth: 10,
     borderColor: '#a41f22',
+    itemLabelFontSizeMax: fontSize, // Dynamic font size based on segment count
     rotationSpeedMax: 500, // Higher initial speed for faster acceleration
     rotationResistance: -25, // Lower resistance for slower deceleration
     onCurrentIndexChange: event => {
@@ -106,6 +118,33 @@ function createWheelConfig(items) {
       currentWinner.value = winner;
       showWinnerModal.value = true;
       isSpinning.value = false;
+      // applause
+      cheerAudio.play().catch(e => console.log('Audio play failed:', e));
+
+      // Trigger confetti when winner is announced
+      const duration = 3000;
+      const animationEnd = Date.now() + duration;
+
+      const frame = () => {
+        confetti({
+          particleCount: 2,
+          angle: 60,
+          spread: 55,
+          origin: { x: 0 }
+        });
+        confetti({
+          particleCount: 2,
+          angle: 120,
+          spread: 55,
+          origin: { x: 1 }
+        });
+
+        if (Date.now() < animationEnd) {
+          requestAnimationFrame(frame);
+        }
+      };
+
+      frame();
     }
   };
 }

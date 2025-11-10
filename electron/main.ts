@@ -1,3 +1,4 @@
+// @ts-ignore
 import { app, BrowserWindow, ipcMain, dialog } from 'electron'
 //import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
@@ -30,7 +31,8 @@ let win: BrowserWindow | null
 
 function createWindow() {
   win = new BrowserWindow({
-    icon: path.join(process.env.APP_ROOT, 'src/assets/jonies-logo.jpg'),
+    icon: path.join(__dirname, 'icon.ico'),
+    autoHideMenuBar: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.mjs'),
     },
@@ -85,7 +87,7 @@ ipcMain.on('toggle-fullscreen', () => {
 })
 
 // Handle saving app data
-ipcMain.handle('save-app-data', async (event, data) => {
+ipcMain.handle('save-app-data', async (_event, data) => {
   try {
     const userDataPath = app.getPath('userData')
     const filePath = path.join(userDataPath, 'wheel-app-data.json')

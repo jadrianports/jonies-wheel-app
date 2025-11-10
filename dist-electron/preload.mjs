@@ -22,7 +22,7 @@ electron.contextBridge.exposeInMainWorld("ipcRenderer", {
   loadAppData: () => electron.ipcRenderer.invoke("load-app-data"),
   // Expose fullscreen change listener
   onFullscreenChanged: (callback) => {
-    electron.ipcRenderer.on("fullscreen-changed", (event, isFullscreen) => callback(isFullscreen));
+    electron.ipcRenderer.on("fullscreen-changed", (_event, isFullscreen) => callback(isFullscreen));
   },
   // Expose method for importing names from xlsx
   importNamesFromXlsx: () => electron.ipcRenderer.invoke("import-names-from-xlsx")

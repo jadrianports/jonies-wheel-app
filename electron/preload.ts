@@ -1,3 +1,5 @@
+// @ts-ignore
+
 import { ipcRenderer, contextBridge } from 'electron'
 
 // --------- Expose some API to the Renderer process ---------
@@ -25,7 +27,7 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
 
   // Expose fullscreen change listener
   onFullscreenChanged: (callback: (isFullscreen: boolean) => void) => {
-    ipcRenderer.on('fullscreen-changed', (event, isFullscreen) => callback(isFullscreen))
+    ipcRenderer.on('fullscreen-changed', (_event, isFullscreen) => callback(isFullscreen))
   },
 
   // Expose method for importing names from xlsx

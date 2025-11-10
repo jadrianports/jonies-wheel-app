@@ -26,7 +26,7 @@
         ]
       }
     ],
-    "icon": "src/assets/jonies-logo.jpg",
+    "icon": "build/icons/win/icon.ico",
     "artifactName": "${productName}-Windows-${version}-Setup.${ext}"
   },
   "nsis": {
