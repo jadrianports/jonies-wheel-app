@@ -26082,6 +26082,9 @@ ipcMain.on("toggle-fullscreen", () => {
   const isFullScreen = win.isFullScreen();
   win.setFullScreen(!isFullScreen);
 });
+ipcMain.on("close-app", () => {
+  app.quit();
+});
 ipcMain.handle("save-app-data", async (_event, data) => {
   try {
     const userDataPath = app.getPath("userData");

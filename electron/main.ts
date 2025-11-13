@@ -86,6 +86,11 @@ ipcMain.on('toggle-fullscreen', () => {
   win.setFullScreen(!isFullScreen)
 })
 
+// Handle close app
+ipcMain.on('close-app', () => {
+  app.quit()
+})
+
 // Handle saving app data
 ipcMain.handle('save-app-data', async (_event, data) => {
   try {

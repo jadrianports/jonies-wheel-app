@@ -1,10 +1,11 @@
 <script setup>
 import { ref, onMounted } from 'vue';
-import { QBtn, QIcon, QAvatar, QToolbarTitle, QToolbar } from 'quasar';
+import { QBtn, QIcon, QAvatar, QToolbarTitle, QToolbar, QDialog, QCard, QCardSection, QCardActions } from 'quasar';
 import { useToast } from 'vue-toastification';
 
 const toast = useToast()
 const emit = defineEmits(['reset', 'import-names'])
+const showDialog = ref(false)
 
 function handleNew() {
     emit('reset')
@@ -40,6 +41,19 @@ async function handleOpen() {
 function toggleFullscreen() {
     window.ipcRenderer.send('toggle-fullscreen')
 }
+
+function handleClose() {
+    showDialog.value = true
+}
+
+function confirmClose() {
+    showDialog.value = false
+    window.ipcRenderer.send('close-app')
+}
+
+function cancelClose() {
+    showDialog.value = false
+}
 </script>
 
 <template>
@@ -59,10 +73,6 @@ function toggleFullscreen() {
                         <q-icon name="fas fa-file" class="q-mr-sm" />
                         <span>New</span>
                     </q-btn>
-                    <q-btn flat no-caps class="q-ml-sm">
-                        <q-icon name="fas fa-palette" class="q-mr-sm" />
-                        <span>Customize</span>
-                    </q-btn>
                     <q-btn flat no-caps class="q-ml-sm" @click="handleOpen">
                         <q-icon name="fas fa-folder-open" class="q-mr-sm" />
                         <span>Import</span>
@@ -70,9 +80,25 @@ function toggleFullscreen() {
                     <q-btn flat no-caps class="q-ml-sm" @click="toggleFullscreen">
                         <q-icon name="fas fa-expand" class="q-mr-sm" />
                     </q-btn>
+                    <q-btn flat no-caps class="q-ml-sm" @click="handleClose">
+                        <q-icon name="fas fa-close" class="q-mr-sm" />
+                    </q-btn>
                 </div>
             </div>
     </header>
+
+    <q-dialog v-model="showDialog" persistent>
+        <q-card>
+            <q-card-section class="row items-center">
+                <span class="q-ml-sm">Are you sure you want to close application?</span>
+            </q-card-section>
+
+            <q-card-actions align="right">
+                <q-btn flat label="No" color="primary" v-close-popup @click="cancelClose" />
+                <q-btn flat label="Yes" color="primary" v-close-popup @click="confirmClose" />
+            </q-card-actions>
+        </q-card>
+    </q-dialog>
 </template>
 
 <style>
