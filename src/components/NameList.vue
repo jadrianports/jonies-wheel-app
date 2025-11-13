@@ -152,10 +152,8 @@ function resetToDefault() {
 }
 
 function importNames(newNames) {
-  // Clear existing names and set new ones, removing duplicates
-  const uniqueNames = [...new Set(newNames)]
-  // Update namesText
-  namesText.value = uniqueNames.join('\n')
+  // Clear existing names and set new ones, accepting all entries including duplicates
+  namesText.value = newNames.join('\n')
   // Switch to entries tab
   activeTab.value = 'entries'
 }

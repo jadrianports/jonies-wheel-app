@@ -41,6 +41,16 @@ function createWindow() {
   // Test active push message to Renderer-process.
   win.webContents.on('did-finish-load', () => {
     win?.webContents.send('main-process-message', (new Date).toLocaleString())
+    // Set zoom to default after page loads
+    win?.webContents.setZoomFactor(1.0)
+    win?.webContents.setZoomLevel(0)
+  })
+
+  // Prevent zoom shortcuts
+  win.webContents.on('before-input-event', (event, input) => {
+    if ((input.control || input.meta) && (input.key === '=' || input.key === '+' || input.key === '-' || input.key === '0')) {
+      event.preventDefault()
+    }
   })
 
   if (VITE_DEV_SERVER_URL) {
@@ -167,8 +177,9 @@ ipcMain.handle('import-names-from-xlsx', async () => {
     for (let i = 1; i < jsonData.length; i++) {
       const row = jsonData[i] as any[]
       const name = row[nameColumnIndex]?.toString().trim()
-      if (name && !names.includes(name)) {
-        names.push(name)
+      if (name) {
+        const formattedName = name.split(' ').map((word: string) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')
+        names.push(formattedName)
       }
     }
 

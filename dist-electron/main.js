@@ -26052,6 +26052,13 @@ function createWindow() {
   });
   win.webContents.on("did-finish-load", () => {
     win == null ? void 0 : win.webContents.send("main-process-message", (/* @__PURE__ */ new Date()).toLocaleString());
+    win == null ? void 0 : win.webContents.setZoomFactor(1);
+    win == null ? void 0 : win.webContents.setZoomLevel(0);
+  });
+  win.webContents.on("before-input-event", (event, input) => {
+    if ((input.control || input.meta) && (input.key === "=" || input.key === "+" || input.key === "-" || input.key === "0")) {
+      event.preventDefault();
+    }
   });
   if (VITE_DEV_SERVER_URL) {
     win.loadURL(VITE_DEV_SERVER_URL);
@@ -26147,8 +26154,9 @@ ipcMain.handle("import-names-from-xlsx", async () => {
     for (let i = 1; i < jsonData.length; i++) {
       const row = jsonData[i];
       const name = (_b = row[nameColumnIndex]) == null ? void 0 : _b.toString().trim();
-      if (name && !names.includes(name)) {
-        names.push(name);
+      if (name) {
+        const formattedName = name.split(" ").map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(" ");
+        names.push(formattedName);
       }
     }
     return { success: true, names };

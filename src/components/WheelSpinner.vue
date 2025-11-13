@@ -19,12 +19,12 @@
     </div>
     <!-- Winner Modal -->
     <q-dialog v-model="showWinnerModal">
-      <q-card style="min-width: 550px">
+      <q-card style="min-width: 1100px">
         <q-card-section class="row items-center">
           <div class="text-h6">We have a winner! 🎉</div>
         </q-card-section>
 
-        <q-card-section class="text-center text-h5 q-pt-none">
+        <q-card-section class="text-center text-h1 text-weight-bold q-pt-none">
           {{ currentWinner }}
         </q-card-section>
 
@@ -235,8 +235,8 @@ function handleWheelClick() {
 
 <style scoped>
 .wheel-wrapper--responsive {
-  width: clamp(300px, 46vw, 1000px);
-  height: clamp(300px, 46vw, 10000px);
+  width: clamp(400px, 50vw, 1200px);
+  height: clamp(400px, 50vw, 12000px);
   cursor: pointer;
 }
 .pointer-overlay {
