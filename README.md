@@ -136,9 +136,3 @@ Output .dmg / .app will be generated in `dist/`.
 ## 📄 License
 
 Proprietary — developed exclusively for **Jonies’s 25th Anniversary**.
-
----
-
-
-✅ A minimal public-facing README
-✅ A detailed developer internal documentation
